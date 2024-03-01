@@ -3,16 +3,16 @@ package main
 import (
 	"os"
 
-	"oteller-microservice/database"
 	"oteller-microservice/routes"
+	"oteller-microservice/services"
 
 	"github.com/gin-gonic/gin"
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
-var otelCollection *mongo.Collection = database.OpenCollection(database.Client, "otel")
-
 func main() {
+	//Servis
+	go services.StartRabbitMQWorker() // Goroutine olarak çağrılıyor
+
 	port := os.Getenv("PORT")
 
 	if port == "" {
@@ -24,6 +24,8 @@ func main() {
 
 	routes.OtelRoutes(router)
 	routes.CommunicationRoutes(router)
+	routes.RaporRoutes(router)
 
 	router.Run(":" + port)
+
 }

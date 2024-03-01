@@ -23,6 +23,7 @@ type Otel struct {
 	Iletisim_bilgisi []IletisimBilgisi  `json:"iletisim_bilgisi"`
 	Otel_id          string             `json:"otel_id"`
 	Created_at       time.Time          `json:"created_at"`
+	Konum            string             `json:"konum"`
 }
 
 type Yetkili struct {
