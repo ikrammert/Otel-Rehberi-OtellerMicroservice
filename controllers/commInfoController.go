@@ -18,7 +18,7 @@ func CreateCommInfo() gin.HandlerFunc {
 
 		// İstekte gelen iletişim bilgilerini al
 		var iletişim models.IletisimBilgisi
-		iletişim.ConnId = connID
+		iletişim.Conn_id = connID
 		if err := c.BindJSON(&iletişim); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return

@@ -3,6 +3,7 @@ package controllers
 import (
 	"context"
 	"fmt"
+	"log"
 	"net/http"
 	"time"
 
@@ -29,9 +30,11 @@ func CreateOtel() gin.HandlerFunc {
 		ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
 		defer cancel()
 
-		otel.CreatedAt, _ = time.Parse(time.RFC3339, time.Now().Format(time.RFC3339))
+		otel.Created_at, _ = time.Parse(time.RFC3339, time.Now().Format(time.RFC3339))
 		otel.UUID = primitive.NewObjectID()
-		otel.OtelId = otel.UUID.Hex()
+
+		// UUID değerini hex formatında alarak otel ID'sini oluştur
+		otel.Otel_id = otel.UUID.Hex()
 
 		result, insertErr := otelCollection.InsertOne(ctx, otel)
 		if insertErr != nil {
@@ -78,6 +81,8 @@ func GetOtel() gin.HandlerFunc {
 		filter := bson.M{"otel_id": otelID}
 
 		var otel models.Otel
+
+		log.Print(otelID)
 
 		// Belirli bir oteli veritabanından getir
 		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)

@@ -17,12 +17,12 @@ import (
 // }
 
 type Otel struct {
-	UUID            primitive.ObjectID `json:"uuid"`
-	Yetkililer      []Yetkili          `json:"yetkililer"`
-	FirmaUnvan      string             `json:"firma_unvan"`
-	IletisimBilgisi []IletisimBilgisi  `json:"iletisim_bilgisi"`
-	OtelId          string             `json:"otel_id"`
-	CreatedAt       time.Time          `json:"created_at"`
+	UUID             primitive.ObjectID `json:"uuid"`
+	Yetkililer       []Yetkili          `json:"yetkililer"`
+	Firma_unvan      string             `json:"firma_unvan"`
+	Iletisim_bilgisi []IletisimBilgisi  `json:"iletisim_bilgisi"`
+	Otel_id          string             `json:"otel_id"`
+	Created_at       time.Time          `json:"created_at"`
 }
 
 type Yetkili struct {
@@ -31,7 +31,7 @@ type Yetkili struct {
 }
 
 type IletisimBilgisi struct {
-	ConnId       string `json:"conn_id"`
-	BilgiTipi    string `json:"bilgi_tipi"`    // Telefon Numarası, E-mail Adresi, Konum
-	BilgiIcerigi string `json:"bilgi_icerigi"` // Bilgi İçeriği
+	Conn_id       string `json:"conn_id"`
+	Bilgi_tipi    string `json:"bilgi_tipi"`    // Telefon Numarası, E-mail Adresi, Konum
+	Bilgi_icerigi string `json:"bilgi_icerigi"` // Bilgi İçeriği
 }
