@@ -10,7 +10,9 @@ import (
 
 	"github.com/streadway/amqp"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 var raporCollection *mongo.Collection = database.OpenCollection(database.Client, "rapors")
@@ -66,11 +68,11 @@ func StartRabbitMQWorker() {
 			raporId := IdAndKonum[0]
 			konum := IdAndKonum[1]
 
-			otelSayisi, err := otelCollection.CountDocuments(context.Background(), bson.M{"konum": konum})
-			if err != nil {
-				log.Printf("Otel sayısı alınamadı: %v", err)
-				continue
-			}
+			// otelSayisi, err := otelCollection.CountDocuments(context.Background(), bson.M{"konum": konum})
+			// if err != nil {
+			// 	log.Printf("Otel sayısı alınamadı: %v", err)
+			// 	continue
+			// }
 
 			cursor, err := otelCollection.Find(context.Background(), bson.M{"konum": konum})
 			if err != nil {
@@ -78,10 +80,9 @@ func StartRabbitMQWorker() {
 				continue
 			}
 
-			// Telefon sayısını saklamak için bir sayaç tanımla
+			otelSayisi := 0
 			telefonSayisi := 0
 
-			// Her otel için iletişim bilgilerini kontrol et
 			for cursor.Next(context.Background()) {
 				var otel models.Otel
 				if err := cursor.Decode(&otel); err != nil {
@@ -95,19 +96,41 @@ func StartRabbitMQWorker() {
 						telefonSayisi++
 					}
 				}
+				// Otel sayısını arttır
+				otelSayisi++
 			}
 
-			filter := bson.M{"uuid": raporId}
-			update := bson.M{
-				"$set": bson.M{
+			log.Printf("\nOtel sayısı: %+v, numara Sayısı:%+v", otelSayisi, telefonSayisi)
+			log.Printf("filter id: %+v", raporId)
+			// Güncelleme işlemi
+
+			forFilterID, err := primitive.ObjectIDFromHex(raporId)
+			if err != nil {
+				log.Printf("ObjectID'ye dönüştürme hatası: %v", err)
+				continue
+			}
+			filter := bson.M{"uuid": forFilterID}
+			update := bson.D{{
+				Key: "$set",
+				Value: bson.M{
 					"otel_sayisi":   otelSayisi,
 					"numara_sayisi": telefonSayisi,
 					"rapor_durumu":  "Tamamlandı",
 				},
+			}}
+
+			upsert := false
+			opt := options.UpdateOptions{
+				Upsert: &upsert,
 			}
-			_, err = raporCollection.UpdateMany(context.Background(), filter, update)
+			result, err := raporCollection.UpdateOne(context.Background(), filter, update, &opt)
 			if err != nil {
 				log.Printf("Rapor güncellenemedi: %v", err)
+				continue
+			}
+
+			if result.ModifiedCount == 0 {
+				log.Printf("Güncellenecek rapor bulunamadı: %v", err)
 				continue
 			}
 
