@@ -3,6 +3,7 @@ package services
 import (
 	"context"
 	"log"
+	"strconv"
 	"strings"
 
 	"oteller-microservice/database"
@@ -104,17 +105,17 @@ func StartRabbitMQWorker() {
 			log.Printf("filter id: %+v", raporId)
 			// Güncelleme işlemi
 
-			forFilterID, err := primitive.ObjectIDFromHex(raporId)
+			filterObjID, err := primitive.ObjectIDFromHex(raporId)
 			if err != nil {
 				log.Printf("ObjectID'ye dönüştürme hatası: %v", err)
 				continue
 			}
-			filter := bson.M{"uuid": forFilterID}
+			filter := bson.M{"uuid": filterObjID}
 			update := bson.D{{
 				Key: "$set",
 				Value: bson.M{
-					"otel_sayisi":   otelSayisi,
-					"numara_sayisi": telefonSayisi,
+					"otel_sayisi":   strconv.Itoa(otelSayisi),
+					"numara_sayisi": strconv.Itoa(telefonSayisi),
 					"rapor_durumu":  "Tamamlandı",
 				},
 			}}

@@ -10,8 +10,10 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/streadway/amqp"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 var raporCollection *mongo.Collection = database.OpenCollection(database.Client, "rapors")
@@ -98,12 +100,50 @@ func CreateRaporByKonum() gin.HandlerFunc {
 
 func ListRapors() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		cursor, err := raporCollection.Find(context.Background(), bson.M{}, options.Find().SetProjection(bson.M{"rapor_durumu": 1, "konum": 1, "uuid": 1, "created_at": 1}))
 
+		if err != nil {
+			msg := fmt.Sprintf("Raporlar alınamadı: %v", err)
+			c.JSON(http.StatusInternalServerError, gin.H{"error": msg})
+			return
+		}
+		defer cursor.Close(context.Background())
+
+		var raporlar []models.Rapor
+		if err := cursor.All(context.Background(), &raporlar); err != nil {
+			msg := fmt.Sprintf("Raporlar decode edilemedi: %v", err)
+			c.JSON(http.StatusInternalServerError, gin.H{"error": msg})
+			return
+		}
+
+		c.JSON(http.StatusOK, raporlar)
 	}
 }
 
 func GetRaporById() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		raporID := c.Param("rapor_id")
 
+		raporObjId, err := primitive.ObjectIDFromHex(raporID)
+		if err != nil {
+			msg := fmt.Sprintf("ObjectID'ye dönüştürme hatası: %v", err)
+			c.JSON(http.StatusInternalServerError, gin.H{"error": msg})
+			return
+		}
+		filter := bson.M{"uuid": raporObjId}
+
+		var rapor models.Rapor
+
+		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+		defer cancel()
+
+		err = raporCollection.FindOne(ctx, filter).Decode(&rapor)
+		if err != nil {
+			msg := fmt.Sprintf("Rapor bulunamadı: %+v", err)
+			c.JSON(http.StatusNotFound, gin.H{"error": msg})
+			return
+		}
+
+		c.JSON(http.StatusOK, rapor)
 	}
 }
