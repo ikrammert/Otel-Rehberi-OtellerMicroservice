@@ -113,6 +113,6 @@ func GetOwners() gin.HandlerFunc {
 		}
 
 		// Otelin yetkililerini istemciye döndür
-		c.JSON(http.StatusOK, otel.Owners)
+		c.JSON(http.StatusOK, otel.Yetkililer)
 	}
 }

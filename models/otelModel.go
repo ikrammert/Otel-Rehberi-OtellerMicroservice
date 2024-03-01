@@ -18,15 +18,20 @@ import (
 
 type Otel struct {
 	UUID            primitive.ObjectID `json:"uuid"`
-	YetkiliAd       string             `json:"yetkili_ad"`
-	YetkiliSoyad    string             `json:"yetkili_soyad"`
+	Yetkililer      []Yetkili          `json:"yetkililer"`
 	FirmaUnvan      string             `json:"firma_unvan"`
 	IletisimBilgisi []IletisimBilgisi  `json:"iletisim_bilgisi"`
 	OtelId          string             `json:"otel_id"`
 	CreatedAt       time.Time          `json:"created_at"`
 }
 
+type Yetkili struct {
+	Ad    string `json:"yetkili_ad"`
+	Soyad string `json:"yetkili_soyad"`
+}
+
 type IletisimBilgisi struct {
+	ConnId       string `json:"conn_id"`
 	BilgiTipi    string `json:"bilgi_tipi"`    // Telefon Numarası, E-mail Adresi, Konum
 	BilgiIcerigi string `json:"bilgi_icerigi"` // Bilgi İçeriği
 }

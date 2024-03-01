@@ -3,6 +3,9 @@ package main
 import (
 	"os"
 
+	"oteller-microservice/database"
+	"oteller-microservice/routes"
+
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -18,15 +21,9 @@ func main() {
 
 	router := gin.New()
 	router.Use(gin.Logger())
-	routes.UserRoutes(router)
-	router.Use(middleware.Authentication())
 
-	routes.FoodRoutes(router)
-	routes.MenuRoutes(router)
-	routes.TableRoutes(router)
-	routes.OrderRoutes(router)
-	routes.OrderItemRoutes(router)
-	routes.InvoiceRoutes(router)
+	routes.OtelRoutes(router)
+	routes.CommunicationRoutes(router)
 
 	router.Run(":" + port)
 }
