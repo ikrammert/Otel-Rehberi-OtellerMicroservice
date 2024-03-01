@@ -26,8 +26,8 @@ type Otel struct {
 }
 
 type Yetkili struct {
-	Ad    string `json:"yetkili_ad"`
-	Soyad string `json:"yetkili_soyad"`
+	Yetkili_ad    string `json:"yetkili_ad"`
+	Yetkili_soyad string `json:"yetkili_soyad"`
 }
 
 type IletisimBilgisi struct {

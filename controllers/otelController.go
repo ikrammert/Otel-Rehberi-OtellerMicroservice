@@ -43,7 +43,12 @@ func CreateOtel() gin.HandlerFunc {
 			return
 		}
 
-		c.JSON(http.StatusOK, result)
+		response := map[string]interface{}{
+			"InsertedID": result.InsertedID,
+			"OtelID":     otel.Otel_id,
+		}
+
+		c.JSON(http.StatusOK, response)
 	}
 }
 
