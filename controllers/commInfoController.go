@@ -8,11 +8,13 @@ import (
 	"oteller-microservice/models"
 
 	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson"
 )
 
 func CreateCommInfo() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		logrus.Info("CreateConnInfo")
 		otelID := c.Param("otel_id")
 		connID := c.Param("conn_id")
 
@@ -48,6 +50,7 @@ func CreateCommInfo() gin.HandlerFunc {
 
 func DeleteCommInfo() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		logrus.Info("DeleteCommInfo")
 		otelID := c.Param("otel_id")
 		connID := c.Param("conn_id") // Silinecek olan iletişim bilgisinin benzersiz kimliği
 

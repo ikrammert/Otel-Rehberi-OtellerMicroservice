@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
 	"github.com/streadway/amqp"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -20,6 +21,7 @@ var raporCollection *mongo.Collection = database.OpenCollection(database.Client,
 
 func CreateRaporByKonum() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		logrus.Info("CreateRaporByKonum")
 		konum := c.Param("konum")
 
 		ctx, cancel := context.WithTimeout(context.Background(), 100*time.Second)
@@ -100,6 +102,7 @@ func CreateRaporByKonum() gin.HandlerFunc {
 
 func ListRapors() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		logrus.Info("ListRapors")
 		cursor, err := raporCollection.Find(context.Background(), bson.M{}, options.Find().SetProjection(bson.M{"rapor_durumu": 1, "konum": 1, "uuid": 1, "created_at": 1}))
 
 		if err != nil {
@@ -122,6 +125,7 @@ func ListRapors() gin.HandlerFunc {
 
 func GetRaporById() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		logrus.Info("GetRaporById")
 		raporID := c.Param("rapor_id")
 
 		raporObjId, err := primitive.ObjectIDFromHex(raporID)

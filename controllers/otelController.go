@@ -11,6 +11,7 @@ import (
 	"oteller-microservice/models"
 
 	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -20,6 +21,7 @@ var otelCollection *mongo.Collection = database.OpenCollection(database.Client, 
 
 func CreateOtel() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		logrus.Info("CreateOtel")
 		var otel models.Otel
 
 		if err := c.BindJSON(&otel); err != nil {
@@ -38,7 +40,7 @@ func CreateOtel() gin.HandlerFunc {
 
 		result, insertErr := otelCollection.InsertOne(ctx, otel)
 		if insertErr != nil {
-			msg := fmt.Sprintf("Yeni Otel Eklenemedi")
+			msg := fmt.Sprint("Yeni Otel Eklenemedi")
 			c.JSON(http.StatusInternalServerError, gin.H{"error": msg})
 			return
 		}
@@ -54,6 +56,7 @@ func CreateOtel() gin.HandlerFunc {
 
 func DeleteOtel() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		logrus.Info("DeleteOtel")
 		otelID := c.Param("otel_id")
 
 		// Otel belgesini silmek için kullanılacak filtre
@@ -80,6 +83,7 @@ func DeleteOtel() gin.HandlerFunc {
 
 func GetOtel() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		logrus.Info("GetOtel")
 		otelID := c.Param("otel_id")
 
 		// Belirli bir oteli bulmak için kullanılacak filtre
@@ -105,6 +109,7 @@ func GetOtel() gin.HandlerFunc {
 
 func GetOwners() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		logrus.Info("GetOwners")
 		otelID := c.Param("otel_id")
 
 		// Belirli bir otelin yetkililerini bulmak için kullanılacak filtre

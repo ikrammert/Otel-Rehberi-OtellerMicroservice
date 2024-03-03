@@ -4,8 +4,13 @@ go 1.20
 
 require (
 	github.com/gin-gonic/gin v1.9.1
+	github.com/sirupsen/logrus v1.9.3
+	github.com/streadway/amqp v1.1.0
+	go.elastic.co/ecslogrus v1.0.0
 	go.mongodb.org/mongo-driver v1.14.0
 )
+
+require github.com/magefile/mage v1.9.0 // indirect
 
 require (
 	github.com/bytedance/sonic v1.11.2 // indirect
@@ -27,7 +32,6 @@ require (
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/montanaflynn/stats v0.0.0-20171201202039-1bf9dbcd8cbe // indirect
 	github.com/pelletier/go-toml/v2 v2.1.1 // indirect
-	github.com/streadway/amqp v1.1.0
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.12 // indirect
 	github.com/xdg-go/pbkdf2 v1.0.0 // indirect
