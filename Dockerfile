@@ -8,6 +8,8 @@ COPY . .
 # Build the command inside the container.
 RUN CGO_ENABLED=0 GOOS=linux go build -v -o app main.go
 
+EXPOSE 8182
+
 # Use a Docker multi-stage build to create a lean production image.
 FROM gcr.io/distroless/base
 COPY --from=builder /go/app/ .
