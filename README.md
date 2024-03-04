@@ -21,6 +21,20 @@ Esnek veri modelleme ve ölçeklenebilirlik avantajları nedeniyle tercih edildi
 **Framework:** gin-gonic/gin
 Hızlı geliştirme ve yüksek performans için ideal bir Go web framework'ü.
 
+## Kullanılan Servisler
+**Message Queue Sistemi** RabbitMQ
+RabbitMQ, güvenilir mesaj sıralama ve dağıtma işlevleri sunan bir açık kaynaklı mesajlaşma yazılımıdır. Proje için RabbitMQ tercih edilmiştir çünkü:
+
+- Güvenilirlik ve Dayanıklılık: RabbitMQ, mesajları güvenilir bir şekilde iletebilir ve depolayabilir, böylece veri kaybı riskini azaltır.
+- Esneklik: RabbitMQ, çeşitli protokollerle uyumlu olduğu için farklı dillerde ve platformlarda kullanılabilir.
+- Yüksek Performans: RabbitMQ, yüksek verimlilik ve düşük gecikme süreleri sağlar, böylece uygulamanın hızlı ve verimli bir şekilde çalışmasını sağlar.
+
+**Diğer Message Queue Sistemleriyle Karşılaştırma:**
+
+**Apache Kafka**: Apache Kafka, yüksek hacimli ve düşük gecikmeli veri akışları için uygundur, ancak genellikle RabbitMQ'dan daha karmaşıktır ve daha fazla yapılandırma gerektirebilir.
+**ActiveMQ**: ActiveMQ, genel amaçlı bir mesajlaşma aracıdır ancak bazı durumlarda RabbitMQ kadar yüksek performans sağlamayabilir ve daha az ölçeklenebilir olabilir.
+**Redis Pub/Sub**: Redis, basit mesajlaşma senaryoları için kullanılabilir ancak RabbitMQ kadar geniş özellik yelpazesine sahip değildir ve daha karmaşık mesajlaşma senaryolarını desteklemeyebilir.
+
 ## İşlevleri Gerçekleştirme
 
 - Otel oluşturma: POST /otels
