@@ -17,7 +17,7 @@ services:
         volumes:
             - ./resources/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
         healthcheck:
-            test: ["CMD", "curl", "-s", "-f", "http://localhost:9200/_cat/health"]
+            test: ["CMD", "curl", "-s", "-f", "http://elasticsearch:9200/_cat/health"]
             interval: 3s
             timeout: 3s
             retries: 10
@@ -45,13 +45,13 @@ services:
         depends_on:
             - elasticsearch
         healthcheck:
-            test: ["CMD", "curl", "-s", "-f", "http://localhost:5601/api/status"]
+            test: ["CMD", "curl", "-s", "-f", "http://kibana:5601/api/status"]
             interval: 3s
             timeout: 3s
             retries: 50
         ports:
             - 5601:5601
-
+    
     rabbitmq:
         image: rabbitmq:3.9
         ports:
@@ -62,8 +62,3 @@ services:
         image: mongo:latest
         ports:
             - "27017:27017"
-
-networks:
-  default:
-    external:
-      name: bridge
