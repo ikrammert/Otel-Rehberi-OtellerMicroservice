@@ -1,18 +1,17 @@
-# Use the offical Golang image to create a build artifact.
+# Use the official Golang image to create a build artifact.
 FROM golang:1.20-alpine as builder
 
 # Copy local code to the container image.
-WORKDIR /go/app
+WORKDIR /go/app-oteller
 COPY . .
 
 # Build the command inside the container.
 RUN CGO_ENABLED=0 GOOS=linux go build -v -o app main.go
 
-EXPOSE 8182
-
 # Use a Docker multi-stage build to create a lean production image.
-FROM gcr.io/distroless/base
-COPY --from=builder /go/app/ .
+FROM alpine:latest
+RUN apk --no-cache add ca-certificates
+COPY --from=builder /go/app-oteller/app /app
 
 # Run the service binary.
 CMD ["/app"]

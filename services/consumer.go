@@ -21,9 +21,10 @@ var otelCollection *mongo.Collection = database.OpenCollection(database.Client, 
 
 func StartRabbitMQWorker() {
 	//RabbitMQ Sunucumuza bağlanıyoruz
-	conn, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
+	conn, err := amqp.Dial("amqp://guest:guest@rabbitmq:5672/")
 	if err != nil {
 		log.Printf("RabbitMQ bağlantı hatası %+v", err)
+		return
 	}
 	defer conn.Close()
 

@@ -10,7 +10,9 @@ import (
 )
 
 func DBinstance() *mongo.Client {
-	MongoDB := "mongodb://localhost:27017" //burayı daha sonra ayarlayacağız
+	// MongoDB := "mongodb://localhost:27017" //burayı daha sonra ayarlayacağız
+	MongoDB := "mongodb://mongodb:27017"
+
 	fmt.Print(MongoDB)
 
 	//mongo.NewClient(options.Client().ApplyURI(MongoDB))

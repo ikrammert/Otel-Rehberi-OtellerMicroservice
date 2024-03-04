@@ -16,13 +16,12 @@ import (
 
 func main() {
 	//Add log
-	go forLogs()
+	forLogs()
 	//Servis
 	logrus.Info("Servis Basliyor")
 	go services.StartRabbitMQWorker() // Goroutine olarak çağrılıyor
 
 	port := os.Getenv("PORT")
-
 	if port == "" {
 		port = "8182"
 	}
