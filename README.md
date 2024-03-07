@@ -59,3 +59,7 @@ docker-compose up -d
 ```
 
 - Kibana'ya git localhost:5601 (Şifre ./elk-stack/.env bulunuyor) 
+
+### RabbitMQ için
+
+- http://localhost:15672/ guest:guest 
