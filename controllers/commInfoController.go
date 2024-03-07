@@ -8,6 +8,7 @@ import (
 	"oteller-microservice/models"
 
 	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson"
 )
 
@@ -20,6 +21,7 @@ func CreateCommInfo() gin.HandlerFunc {
 		var iletişim models.IletisimBilgisi
 		iletişim.Conn_id = connID
 		if err := c.BindJSON(&iletişim); err != nil {
+			logrus.WithFields(RefId).Errorf("error:%v", err.Error())
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
@@ -38,10 +40,12 @@ func CreateCommInfo() gin.HandlerFunc {
 
 		result, err := otelCollection.UpdateOne(ctx, filter, update)
 		if err != nil {
+			logrus.WithFields(RefId).Error("İletişim bilgisi eklenemedi")
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "İletişim bilgisi eklenemedi"})
 			return
 		}
 
+		logrus.WithFields(RefId).Info("İşlem Başarılı @CreateCommInfo")
 		c.JSON(http.StatusOK, result)
 	}
 }
@@ -65,15 +69,19 @@ func DeleteCommInfo() gin.HandlerFunc {
 
 		result, err := otelCollection.UpdateOne(ctx, filter, update)
 		if err != nil {
+			logrus.WithFields(RefId).Error("İletişim bilgisi kaldırılamadı")
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "İletişim bilgisi kaldırılamadı"})
+
 			return
 		}
 
 		if result.ModifiedCount == 0 {
+			logrus.WithFields(RefId).Error("İletişim bilgisi bulunamadı")
 			c.JSON(http.StatusNotFound, gin.H{"error": "İletişim bilgisi bulunamadı"})
 			return
 		}
 
+		logrus.WithFields(RefId).Info("İletişim bilgisi başarıyla kaldırıldı")
 		c.JSON(http.StatusOK, gin.H{"message": "İletişim bilgisi başarıyla kaldırıldı"})
 	}
 }

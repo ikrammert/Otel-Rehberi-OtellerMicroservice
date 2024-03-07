@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
 	"github.com/streadway/amqp"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -36,6 +37,7 @@ func CreateRaporByKonum() gin.HandlerFunc {
 		conn, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
 		if err != nil {
 			msg := fmt.Sprintf("RabbitMQ sunucusuna bağlanılamadı: %v", err)
+			logrus.WithFields(RefId).Error(msg)
 			c.JSON(http.StatusInternalServerError, gin.H{"error": msg})
 			return
 		}
@@ -44,6 +46,7 @@ func CreateRaporByKonum() gin.HandlerFunc {
 		ch, err := conn.Channel()
 		if err != nil {
 			msg := fmt.Sprintf("Kanal oluşturulamadı: %v", err)
+			logrus.WithFields(RefId).Error(msg)
 			c.JSON(http.StatusInternalServerError, gin.H{"error": msg})
 			return
 		}
@@ -59,6 +62,7 @@ func CreateRaporByKonum() gin.HandlerFunc {
 		)
 		if err != nil {
 			msg := fmt.Sprintf("Kuyruk oluşturulamadı: %v", err)
+			logrus.WithFields(RefId).Error(msg)
 			c.JSON(http.StatusInternalServerError, gin.H{"error": msg})
 			return
 		}
@@ -76,6 +80,7 @@ func CreateRaporByKonum() gin.HandlerFunc {
 		)
 		if err != nil {
 			msg := fmt.Sprintf("Mesaj gönderilemedi: %v", err)
+			logrus.WithFields(RefId).Error(msg)
 			c.JSON(http.StatusInternalServerError, gin.H{"error": msg})
 			return
 		}
@@ -83,6 +88,7 @@ func CreateRaporByKonum() gin.HandlerFunc {
 		result, insertErr := raporCollection.InsertOne(ctx, rapor)
 		if insertErr != nil {
 			msg := fmt.Sprintf("Rapor İsteği Eklenemedi")
+			logrus.WithFields(RefId).Error(msg)
 			c.JSON(http.StatusInternalServerError, gin.H{"error": msg})
 			return
 		}
@@ -94,6 +100,7 @@ func CreateRaporByKonum() gin.HandlerFunc {
 		}
 
 		// Başarılı bir yanıt dönme
+		logrus.WithFields(RefId).Info("İşlem Başarılı @CreateRaporByKonum")
 		c.JSON(http.StatusOK, response)
 	}
 }
@@ -104,6 +111,7 @@ func ListRapors() gin.HandlerFunc {
 
 		if err != nil {
 			msg := fmt.Sprintf("Raporlar alınamadı: %v", err)
+			logrus.WithFields(RefId).Error(msg)
 			c.JSON(http.StatusInternalServerError, gin.H{"error": msg})
 			return
 		}
@@ -112,10 +120,12 @@ func ListRapors() gin.HandlerFunc {
 		var raporlar []models.Rapor
 		if err := cursor.All(context.Background(), &raporlar); err != nil {
 			msg := fmt.Sprintf("Raporlar decode edilemedi: %v", err)
+			logrus.WithFields(RefId).Error(msg)
 			c.JSON(http.StatusInternalServerError, gin.H{"error": msg})
 			return
 		}
 
+		logrus.WithFields(RefId).Info("İşlem Başarılı @ListRapors")
 		c.JSON(http.StatusOK, raporlar)
 	}
 }
@@ -127,6 +137,7 @@ func GetRaporById() gin.HandlerFunc {
 		raporObjId, err := primitive.ObjectIDFromHex(raporID)
 		if err != nil {
 			msg := fmt.Sprintf("ObjectID'ye dönüştürme hatası: %v", err)
+			logrus.WithFields(RefId).Error(msg)
 			c.JSON(http.StatusInternalServerError, gin.H{"error": msg})
 			return
 		}
@@ -140,10 +151,12 @@ func GetRaporById() gin.HandlerFunc {
 		err = raporCollection.FindOne(ctx, filter).Decode(&rapor)
 		if err != nil {
 			msg := fmt.Sprintf("Rapor bulunamadı: %+v", err)
+			logrus.WithFields(RefId).Error(msg)
 			c.JSON(http.StatusNotFound, gin.H{"error": msg})
 			return
 		}
 
+		logrus.WithFields(RefId).Info("İşlem Başarılı @GetRaporById")
 		c.JSON(http.StatusOK, rapor)
 	}
 }
