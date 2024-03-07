@@ -25,9 +25,13 @@ Hızlı geliştirme ve yüksek performans için ideal bir Go web framework'ü.
 **Message Queue Sistemi** RabbitMQ
 RabbitMQ, güvenilir mesaj sıralama ve dağıtma işlevleri sunan bir açık kaynaklı mesajlaşma yazılımıdır. Proje için RabbitMQ tercih edilmiştir çünkü:
 
+
 - Güvenilirlik ve Dayanıklılık: RabbitMQ, mesajları güvenilir bir şekilde iletebilir ve depolayabilir, böylece veri kaybı riskini azaltır.
 - Esneklik: RabbitMQ, çeşitli protokollerle uyumlu olduğu için farklı dillerde ve platformlarda kullanılabilir.
 - Yüksek Performans: RabbitMQ, yüksek verimlilik ve düşük gecikme süreleri sağlar, böylece uygulamanın hızlı ve verimli bir şekilde çalışmasını sağlar.
+
+**Logging-ELK**
+ELK: Loglama, analiz ve görselleştirme için kullanılan bir yazılım yığınıdır.
 
 **Diğer Message Queue Sistemleriyle Karşılaştırma:**
 
@@ -46,3 +50,12 @@ RabbitMQ, güvenilir mesaj sıralama ve dağıtma işlevleri sunan bir açık ka
 - Konuma göre istatistik raporu talebi: POST /reports
 - Oluşturulan raporların listelenmesi: GET /reports
 - Bir raporun detay bilgilerinin getirilmesi: GET /reports/{reportID}
+
+### Log için
+
+```
+cd elk-stack
+docker-compose up -d
+```
+
+- Kibana'ya git localhost:5601 (Şifre ./elk-stack/.env bulunuyor) 
