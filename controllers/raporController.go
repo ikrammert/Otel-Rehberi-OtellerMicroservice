@@ -87,7 +87,7 @@ func CreateRaporByKonum() gin.HandlerFunc {
 
 		result, insertErr := raporCollection.InsertOne(ctx, rapor)
 		if insertErr != nil {
-			msg := fmt.Sprintf("Rapor İsteği Eklenemedi")
+			msg := fmt.Sprint("Rapor İsteği Eklenemedi")
 			logrus.WithFields(RefId).Error(msg)
 			c.JSON(http.StatusInternalServerError, gin.H{"error": msg})
 			return

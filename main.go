@@ -13,7 +13,11 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func init() {
+func main() {
+	//Servis
+	go services.StartRabbitMQWorker() // Goroutine olarak çağrılıyor
+
+	// logging
 	//Logging (ELK) - Set For Format
 	logrus.SetFormatter(&logrus.JSONFormatter{
 		FieldMap: logrus.FieldMap{
@@ -28,18 +32,11 @@ func init() {
 	filePath := "./elk-stack/ingest_data/out.log"
 	file, err := os.OpenFile(filePath, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0600)
 	if err != nil {
-		log.Panicf("open file error: %v", err)
+		log.Panicf("file hata: %v", err)
 	}
 	// write log to terminal and file
 	logrus.SetOutput(io.MultiWriter(file, os.Stdout))
 	defer file.Close()
-}
-
-func main() {
-	//Servis
-	go services.StartRabbitMQWorker() // Goroutine olarak çağrılıyor
-
-	// logging
 	refId := logrus.Fields{
 		"ref-id": uuid.NewString(), //For main
 	}
